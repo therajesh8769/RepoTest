@@ -1,4 +1,5 @@
 const { Octokit } = require('@octokit/rest');
+const { githubConfig } = require('../config/github');
 const logger = require('./logger');
 
 const authenticateToken = async (req, res, next) => {
@@ -23,4 +24,12 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticateToken };
+const validateGithubConfig = (req, res, next) => {
+  if (!githubConfig.clientId || !githubConfig.redirectUri) {
+    logger.error('Invalid GitHub configuration');
+    return res.status(500).json({ error: 'Invalid server configuration' });
+  }
+  next();
+};
+
+module.exports = { authenticateToken, validateGithubConfig };

@@ -1,7 +1,8 @@
 const express = require('express');
 const axios = require('axios');
-const { githubConfig } = require('../config/github');
-const logger = require('../utils/logger');
+const { githubConfig } = require('../github');
+const logger = require('../../src/utils/logger');
+const { validateGithubConfig } = require('../middleware/validateConfig');
 
 const router = express.Router();
 
@@ -55,10 +56,18 @@ router.post('/github/exchange', async (req, res) => {
   }
 });
 
-router.get('/github/url', (req, res) => {
-  console.log(githubConfig.clientId)
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.clientId}&redirect_uri=${githubConfig.redirectUri}&scope=repo,user:email`;
-  res.json({ url: githubAuthUrl });
+router.get('/github/url', validateGithubConfig, (req, res) => {
+  try {
+    logger.info('Generating GitHub auth URL', { clientId: githubConfig.clientId });
+    
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.clientId}&redirect_uri=${githubConfig.redirectUri}&scope=repo,user:email`;
+    
+    logger.info('Generated GitHub auth URL', { url: githubAuthUrl });
+    res.json({ url: githubAuthUrl });
+  } catch (error) {
+    logger.error('Failed to generate GitHub auth URL', { error: error.message });
+    res.status(500).json({ error: 'Failed to generate authorization URL' });
+  }
 });
 
 module.exports = router;
