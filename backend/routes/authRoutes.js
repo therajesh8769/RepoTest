@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-const { githubConfig } = require('../github');
+const { githubConfig } = require('../config/github');
 const logger = require('../utils/logger');
 const { validateGithubConfig } = require('../utils/authMiddleware');
 
