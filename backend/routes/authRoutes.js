@@ -1,8 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const { githubConfig } = require('../github');
-const logger = require('../../src/utils/logger');
-const { validateGithubConfig } = require('../middleware/validateConfig');
+const logger = require('../utils/logger');
+const { validateGithubConfig } = require('../utils/authMiddleware');
 
 const router = express.Router();
 
