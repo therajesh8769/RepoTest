@@ -61,7 +61,7 @@ router.get('/github/url', validateGithubConfig, (req, res) => {
     logger.info('Generating GitHub auth URL', { clientId: githubConfig.clientId });
     
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.clientId}&redirect_uri=${githubConfig.redirectUri}&scope=repo,user:email`;
-    
+    console.log('Generated GitHub auth URL:', githubAuthUrl);
     logger.info('Generated GitHub auth URL', { url: githubAuthUrl });
     res.json({ url: githubAuthUrl });
   } catch (error) {
